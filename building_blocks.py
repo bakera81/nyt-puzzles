@@ -12,19 +12,19 @@ d = enchant.Dict("en_US")
 #     'sle', 'taj', 'tha', 'tri', 'ugn', 'ugu', 'wha', 'zle'
 # ]
 
-starters = ['est', 'ali', 'dsc', 'ivo', 'rit', 'pev', 'erl', 'sce']
-position = 'middle'
-blocks = [
-    'anc', 'lav', 'lan', 'equ', 'rew', 'gra', 'int', 'cre', 'ral', 'ere',
-    'ape', 'cal', 'ten', 'ine', 'ock', 'ndo', 'nyn', 'ose', 'run'
-]
-
-# starters = ['tch', 'orm', 'ter', 'wer', 'xin', 'ion', 'ast', 'nce']
-# position = 'last'
+# starters = ['est', 'ali', 'dsc', 'ivo', 'rit', 'pev', 'erl', 'sce']
+# position = 'middle'
 # blocks = [
-#     'ant', 'cri', 'cun', 'eif', 'ela', 'flo', 'fre', 'ito', 'kil', 'may', 'ned',
-#     'oli', 'pwa', 'sim', 'sta', 'sto', 'ter', 'ulc', 'ytu'
+#     'anc', 'lav', 'lan', 'equ', 'rew', 'gra', 'int', 'cre', 'ral', 'ere',
+#     'ape', 'cal', 'ten', 'ine', 'ock', 'ndo', 'nyn', 'ose', 'run'
 # ]
+
+starters = ['tch', 'orm', 'ter', 'wer', 'xin', 'ion', 'ast', 'nce']
+position = 'last'
+blocks = [
+    'ant', 'cri', 'cun', 'eif', 'ela', 'flo', 'fre', 'ito', 'kil', 'may', 'ned',
+    'oli', 'pwa', 'sim', 'sta', 'sto', 'ter', 'ulc', 'ytu'
+]
 
 
 def solve(starters, position, blocks):
@@ -36,7 +36,8 @@ def solve(starters, position, blocks):
                 [
                     {
                         'string': x[0] + x[1] + starter,
-                        'is_word': d.check(x[0] + x[1] + starter)
+                        'is_word': d.check(x[0] + x[1] + starter),
+                        'starter': starter
                     }
                     for x in block_perms
                 ]
@@ -46,7 +47,8 @@ def solve(starters, position, blocks):
                 [
                     {
                         'string': x[0] + starter + x[1],
-                        'is_word': d.check(x[0] + starter + x[1])
+                        'is_word': d.check(x[0] + starter + x[1]),
+                        'starter': starter
                     }
                     for x in block_perms
                 ]
@@ -56,11 +58,18 @@ def solve(starters, position, blocks):
                 [
                     {
                         'string': starter + x[0] + x[1],
-                        'is_word': d.check(starter + x[0] + x[1])
+                        'is_word': d.check(starter + x[0] + x[1]),
+                        'starter': starter
                     }
                     for x in block_perms
                 ]
             )
 
     found_words = [x for x in block_starter_combs if x['is_word']]
-    return found_words
+    sorted_words = []
+    for s in starters:
+        for x in found_words:
+            if x['starter'] == s:
+                sorted_words.append(x)
+
+    return sorted_words
